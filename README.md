@@ -4,13 +4,20 @@ this bash script is a tool for downloading youtube video directly with auto dete
 
 
 ## example
+
 <pre>
+apt-get install git
+
 git clone https://github.com/AysadKozanoglu/youtube-downloader.git
 
 cd youtube-downloader
+
 chmod a+x yt-downloader 
-./yt-downloader <youtube video ID>
+
+./yt-downloader videoID
+
 ./yt.downloader SWEUjTHr6Hg
+
 </pre>
 
 ###developed by Aysad Kozanoglu 
