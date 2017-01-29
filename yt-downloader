@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+#=======================================
+#
+#  youtube video download locally
+#          bash script 
+#       by Aysad Kozanoglu
+#    email: aysadx@gmail.com
+#
+#=======================================
+
+command -v wget  >/dev/null 2>&1 || { echo >&2 " wget command not found. try to install it on debian with apt-get install wget.  Aborting."; exit 1;}
+
+decode() {
+    to_decode='s:%([0-9A-Fa-f][0-9A-Fa-f]):\\x\1:g'
+    printf "%b" `echo $1 | sed 's:&:\n:g' | grep "^$2" | cut -f2 -d'=' | sed -r $to_decode`
+}
+data=`wget http://www.youtube.com/get_video_info?video_id=$1\&hl=pt_BR -q -O-`
+url_encoded_fmt_stream_map=`decode $data 'url_encoded_fmt_stream_map' | cut -f1 -d','`
+signature=`decode $url_encoded_fmt_stream_map 'sig'`
+url=`decode $url_encoded_fmt_stream_map 'url'`
+test $2 && name=$2 || name=`decode $data 'title' | sed 's:+: :g;s:/:-:g'`
+test "$name" = "-" && name=/dev/stdout || name="$name.video.mp4"
+wget -q --show-progress "${url}&signature=${signature}" -O "$name"
+
